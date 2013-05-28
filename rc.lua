@@ -70,18 +70,18 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
 {
-    awful.layout.suit.tile,
-    awful.layout.suit.floating,
+    awful.layout.suit.tile,		--1
+    awful.layout.suit.floating,		--2
     --awful.layout.suit.tile.left,
-    awful.layout.suit.tile.bottom,
+    awful.layout.suit.tile.bottom,	--3
     --awful.layout.suit.tile.top,
     --awful.layout.suit.fair,
-    awful.layout.suit.fair.horizontal,
+    awful.layout.suit.fair.horizontal,	--4
     --awful.layout.suit.spiral,
     --awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
+    awful.layout.suit.max,		--5
     --awful.layout.suit.max.fullscreen,
-    awful.layout.suit.magnifier
+    awful.layout.suit.magnifier		--6
 }
 ---- }}}
 --
@@ -93,28 +93,22 @@ if beautiful.wallpaper then
 end
 ---- }}}
 
----- {{{ Tags
----- Define a tag table which hold all screen tags.
---tags = {}
---for s = 1, screen.count() do
---    -- Each screen has its own tag table.
---    tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
---end
----- }}}
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
-tags = {
-       names = {"main","irc","web","dev","pdf","media","p2p"},
-       layout = {layouts[1], layouts[3], layouts[5], layouts[1], layouts[5], layouts[6], layouts[5] }
-        --names = {"main","irc","web","dev","pdf","media","mpd","p2p","misc"},
-        --layout = {layouts[1], layouts[7], layouts[7], layouts[1], layouts[7],     layouts[8], layouts[2], layouts[6], layouts[9] }
-}
+tags =  {
+       	 names =  {"main","irc","web","dev","pdf","media","p2p"},
+       	 layout = {layouts[1], layouts[3], layouts[5], layouts[1], layouts[5], layouts[6], layouts[5] }
+	}
+
 for s = 1, screen.count() do
    -- Each screen has its own tag table.
    tags[s] = awful.tag(tags.names, s, tags.layout)
     awful.tag.seticon(beautiful.transm_icon,tags[s][7])
 end
+--transmission icon, to represent my p2p client (looking for a better one if you wanna propose one)
 awful.tag.setproperty(tags[1][7], "icon_only", 1)
+--}}}
+
 
 
 -- {{{ Menu
@@ -149,26 +143,6 @@ mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesom
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mymainmenu })
 -- }}
-
-
-
----- {{{ Menu
----- Create a laucher widget and a main menu
---myawesomemenu = {
---   { "manual", terminal .. " -e man awesome" },
---   { "edit config", editor_cmd .. " " .. awesome.conffile },
---   { "restart", awesome.restart },
---   { "quit", awesome.quit }
---}
---
---mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
---                                    { "Debian", debian_menu.Debian },
---                                    { "open terminal", terminal }
---                                  }
---                        })
---
---mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
---                                     menu = mymainmenu })
 
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
@@ -306,10 +280,10 @@ globalkeys = awful.util.table.join(
 
 
     -- Layout manipulation
-    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
-    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end),
-    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
-    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
+    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx(  1)    end),
+    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx( -1)    end),
+    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),--wtf is this?
+    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),--wtf is this?
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto),
     awful.key({ modkey,           }, "Tab",
         function ()

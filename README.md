@@ -1,4 +1,4 @@
-awesomeconf
+awesomeconf (for awesome 3.5.1)
 ===========
 
 my awesome config
