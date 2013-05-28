@@ -8,7 +8,7 @@ themes_dir = os.getenv("HOME") .. "/.config/awesome/themes/default"
 
 theme.font          = "visitor TT2 BRK 12"
 
-
+--Wallpaper
 theme.wallpaper = themes_dir .. "/konachan.jpg"
 
 
@@ -81,11 +81,6 @@ theme.menu_width  = "110"
 --theme.titlebar_maximized_button_focus_inactive  = themes_dir .. "/titlebar/maximized_focus_inactive.png"
 --theme.titlebar_maximized_button_normal_active = themes_dir .. "/titlebar/maximized_normal_active.png"
 --theme.titlebar_maximized_button_focus_active  = themes_dir .. "/titlebar/maximized_focus_active.png"
-
--- You can use your own command to set your wallpaper
---theme.wallpaper_cmd = { "fbsetbg -f /home/neodiablow/.config/awesome/themes/default/konachan.jpg" }
---theme.wallpaper_cmd = fbsetbg -f /home/neodiablow/.config/awesome/themes/default/konachan.jpg
---theme.wallpaper_cmd = { "awsetbg /home/neodiablow/.config/awesome/themes/default/background.png" }
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_dir .. "/layouts/fairhw.png"
