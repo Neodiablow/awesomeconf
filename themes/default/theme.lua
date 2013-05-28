@@ -96,6 +96,8 @@ theme.layout_tiletop = themes_dir .. "/layouts/tiletopw.png"
 theme.layout_spiral  = themes_dir .. "/layouts/spiralw.png"
 theme.layout_dwindle = themes_dir .. "/layouts/dwindlew.png"
 
+
+--Personal icons (awesome menu rc.lua)
 theme.awesome_icon = os.getenv("HOME") .. "/.config/awesome/icons/awesome16.png"
 theme.debian_icon = themes_dir .. "/icons/debian_icon16.png"
 theme.irc_icon = themes_dir .. "/icons/irssi.png"
