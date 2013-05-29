@@ -11,6 +11,8 @@ I use mpd, you might need to modify a little bit conky if you wish to display th
 
 I use thunar as a file manager (change the mod + e binding if you don't use thunar).
 
+I use xtrlock
+
 I use URXVT as terminal.
 
 I use wicd and htop, it spawns at restart of awesome.

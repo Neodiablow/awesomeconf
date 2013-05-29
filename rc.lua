@@ -273,10 +273,13 @@ globalkeys = awful.util.table.join(
         end),
     awful.key({ modkey,           }, "w", function () mymainmenu:show() end),
 
-    -- Personal Key binding (Czk Keyboard) ameliorable avec un array de os.execute("setxkbmap country")
+    -- Personal Key binding 
+    --(Czk Keyboard) ameliorable avec un array de os.execute("setxkbmap country")
     awful.key({ modkey, "Shift"   }, "!", function () os.execute("setxkbmap us")   end),
     awful.key({ modkey, "Shift"   }, "/", function () os.execute("setxkbmap fr")   end),
-
+   
+    --lock screen
+    awful.key({ modkey, "Control"   }, "a", function () os.execute("xtrlock")   end),
 
 
     -- Layout manipulation
