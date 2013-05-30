@@ -28,7 +28,14 @@ copy font to ~/.fonts
 
 copy .conkyrc to ~/
 
+if you want to use "alt" instead of "super/windows" you shall modify Mod4 to Mod1
 
+if you don't have a Debian based distribution, you will need to remove all the occurences of "debian menu"
+
+the same goes for conky and wicd
+
+
+finally you might want to remove my personal binds such as the xtrlock one and the layout keyboard
 
 ## Thanks
 Arpinux for the fonts
