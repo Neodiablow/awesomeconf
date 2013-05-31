@@ -5,6 +5,7 @@ awful.rules = require("awful.rules")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
+local vicious = require("vicious")
 -- Theme handling library
 local beautiful = require("beautiful")
 -- Notification library
@@ -40,18 +41,19 @@ end
 -- }}}
 
 
-
-
 -- {{{ Variable definitions
--- Themes define colours, icons, and wallpapers
-awesome_dir = os.getenv("HOME")  .. "/.config/awesome/"
+-- Useful Paths
+home = os.getenv("HOME")
+conf_dir = home .. "/.config/awesome"
+scriptdir = conf_dir .. "/scripts/"
+themes = conf_dir .. "/themes"
+active_theme = themes .. "/default"
 
+--Active theme
+						--beautiful.init("/usr/share/awesome/themes/default/theme.lua")
+beautiful.init( active_theme .. "/theme.lua") 
 
-
---beautiful.init("/usr/share/awesome/themes/default/theme.lua")
-beautiful.init( awesome_dir .. "themes/default/theme.lua") 
-
--- This is used later as the default terminal and editor to run.
+-- Lazy shortucts
 terminal = "rxvt-unicode"
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
@@ -84,7 +86,8 @@ local layouts =
     awful.layout.suit.magnifier		--6
 }
 ---- }}}
---
+
+
 -- {{{ Wallpaper
 if beautiful.wallpaper then
     for s = 1, screen.count() do
@@ -92,6 +95,7 @@ if beautiful.wallpaper then
     end
 end
 ---- }}}
+
 
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
@@ -101,21 +105,22 @@ tags =  {
 	}
 
 for s = 1, screen.count() do
-   -- Each screen has its own tag table.
+
+-- Each screen has its own tag table.
    tags[s] = awful.tag(tags.names, s, tags.layout)
     awful.tag.seticon(beautiful.transm_icon,tags[s][7])
 end
+
 --transmission icon, to represent my p2p client (looking for a better one if you wanna propose one)
 awful.tag.setproperty(tags[1][7], "icon_only", 1)
 --}}}
-
 
 
 -- {{{ Menu
 -- Create a laucher widget and a main menu
 myawesomemenu = {
    { "manual", terminal .. " -e man awesome" },
-   { "edit config", editor_cmd .. " " .. awesome.conffile },
+   { "edit config", editor_cmd .. " " .. conf_dir .. "/rc.lua"  },
    { "restart", awesome.restart },
    { "quit", awesome.quit }
 }
@@ -142,13 +147,14 @@ mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesom
 
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mymainmenu })
--- }}
 
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
+
 -- {{{ Wibox
+
 -- Create a textclock widget
 mytextclock = awful.widget.textclock()
 
@@ -204,9 +210,84 @@ mytasklist.buttons = awful.util.table.join(
                                           end))
 
 for s = 1, screen.count() do
+
     -- Create a promptbox for each screen
     mypromptbox[s] = awful.widget.prompt()
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
+
+	--{{{Widgets
+	
+	   -- CPU widget
+	cpuicon = wibox.widget.imagebox()
+	cpuicon:set_image(beautiful.widget_cpu)
+	cpuwidget = wibox.widget.textbox()
+	vicious.register(cpuwidget, vicious.widgets.cpu, '<span font="Terminus 9"><span background="#535d6c" color="#ffffff" font="visitor TT2 BRK 12" > $1% </span> </span>', 3)
+	cpuicon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn(tasks, false) end)))
+	
+	-- MEM widget
+	memicon = wibox.widget.imagebox()
+	memicon:set_image(beautiful.widget_mem)
+	memwidget = wibox.widget.textbox()
+	vicious.register(memwidget, vicious.widgets.mem, ' $2MB ', 13)
+	
+	    -- Volume widget
+	volicon = wibox.widget.imagebox()
+	volicon:set_image(beautiful.widget_vol)
+	volumewidget = wibox.widget.textbox()
+	vicious.register(volumewidget, vicious.widgets.volume,
+	function (widget, args)
+	  if (args[2] ~= "♩" ) then
+	      if (args[1] == 0) then volicon:set_image(beautiful.widget_vol_no)
+	      elseif (args[1] <= 50) then volicon:set_image(beautiful.widget_vol_low)
+	      else volicon:set_image(beautiful.widget_vol)
+	      end
+	  else volicon:set_image(beautiful.widget_vol_mute)
+	  end
+	  return '<span background="#535d6c" font="Terminus 9"><span color="#ffffff" font="visitor TT2 BRK 12">' .. args[1] .. '% </span> </span>'end, 1, "Master")
+	
+	
+	-- Music widget
+	mpdwidget = wibox.widget.textbox()
+	mpdicon = wibox.widget.imagebox()
+	mpdicon:set_image(beautiful.widget_music)
+	mpdicon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(musicplr) end)))
+	
+	vicious.register(mpdwidget, vicious.widgets.mpd,
+	function(widget, args)
+	-- play
+	if (args["{state}"] == "Play") then
+	    mpdicon:set_image(beautiful.widget_music_on)
+	return "<span background='#222222' font='Terminus 9'> <span font='visitor TT2 BRK 12'>" .. "<span color='#e54c62'>" .. args["{Title}"] .. "</span>"  .. "<span color='#b2b2b2'>" .. " - " .. "</span>"  .. "<span color='#b2b2b2'>"  .. args["{Artist}"] .. "</span>" .. " </span></span>"
+	-- pause
+	elseif (args["{state}"] == "Pause") then
+	    mpdicon:set_image(beautiful.widget_music)
+	return "<span background='#222222' font='Terminus 9'> <span font='visitor TT2 BRK 12'>" .. "<span color='#b2b2b2'>" .. "Paused" .. "</span>" .. " </span></span>"
+	else
+	    mpdicon:set_image(beautiful.widget_music)
+	return ""
+	end
+	end, 1)
+	
+	
+	--- Separators
+	spr = wibox.widget.textbox(' ')
+	arrl = wibox.widget.imagebox()
+	arrl:set_image(beautiful.arrl)
+	arrl_dl = wibox.widget.imagebox()
+	arrl_dl:set_image(beautiful.arrl_dl)
+	arrl_ld = wibox.widget.imagebox()
+	arrl_ld:set_image(beautiful.arrl_ld)
+	spr = wibox.widget.textbox(' ')
+	arrl = wibox.widget.imagebox()
+	arrl:set_image(beautiful.arrl)
+	arrl_dl = wibox.widget.imagebox()
+	arrl_dl:set_image(beautiful.arrl_dl)
+	arrl_ld = wibox.widget.imagebox()
+	arrl_ld:set_image(beautiful.arrl_ld)
+	
+	--}}}
+
+
     -- We need one layoutbox per screen.
     mylayoutbox[s] = awful.widget.layoutbox(s)
     mylayoutbox[s]:buttons(awful.util.table.join(
@@ -231,6 +312,21 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
+    			--if s == 1 then right_layout:add(wibox.widget.systray()) end --has been put below
+    right_layout:add(spr)
+    right_layout:add(arrl)
+    right_layout:add(arrl)
+    right_layout:add(mpdicon)
+    right_layout:add(mpdwidget)
+    right_layout:add(arrl_ld)
+    right_layout:add(volicon)
+    right_layout:add(volumewidget)
+    right_layout:add(arrl_dl)
+    right_layout:add(memicon)
+    right_layout:add(memwidget)
+    right_layout:add(arrl_ld)
+    right_layout:add(cpuicon)
+    right_layout:add(cpuwidget)
     if s == 1 then right_layout:add(wibox.widget.systray()) end
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
@@ -246,6 +342,7 @@ for s = 1, screen.count() do
     statusbar = {}
 end
 -- }}}
+
 
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
@@ -273,13 +370,15 @@ globalkeys = awful.util.table.join(
         end),
     awful.key({ modkey,           }, "w", function () mymainmenu:show() end),
 
-    -- Personal Key binding 
-    --(Czk Keyboard) ameliorable avec un array de os.execute("setxkbmap country")
-    awful.key({ modkey, "Shift"   }, "!", function () os.execute("setxkbmap us")   end),
-    awful.key({ modkey, "Shift"   }, "/", function () os.execute("setxkbmap fr")   end),
    
-    --lock screen
-    awful.key({ modkey, "Control"   }, "a", function () os.execute("xtrlock")   end),
+    --{{Personal Key binding 
+    	--(Czk Keyboard) ameliorable avec un array de os.execute("setxkbmap country")
+    	awful.key({ modkey, "Shift"   }, "!", function () os.execute("setxkbmap us")   end),
+    	awful.key({ modkey, "Shift"   }, "/", function () os.execute("setxkbmap fr")   end),
+   
+    	--lock screen
+    	awful.key({ modkey, "Control"   }, "a", function () os.execute("xtrlock")   end),
+    --}} 
 
 
     -- Layout manipulation
@@ -395,6 +494,7 @@ clientbuttons = awful.util.table.join(
 root.keys(globalkeys)
 -- }}}
 
+
 -- {{{ Rules
 awful.rules.rules = {
     -- All clients will match this rule.
@@ -489,13 +589,24 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}
 
+--EXPERIMENTAL
 
-function run_once(prg)
-    if not prg then
-        do return nil end
-    end
-    awful.util.spawn_with_shell("pgrep -f -u $USER -x " .. prg .. " || (" .. prg .. ")")
-end
+--function run_once(prg)
+--    if not prg then
+--        do return nil end
+--    end
+--    awful.util.spawn_with_shell("pgrep -f -u $USER -x " .. prg .. " || (" .. prg .. ")")
+--end
+
+
+function run_once(cmd)
+  findme = cmd
+  firstspace = cmd:find(" ")
+  if firstspace then
+     findme = cmd:sub(0, firstspace-1)
+  end
+  awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
+ end 
 
 
 os.execute("killall htop")
@@ -505,3 +616,5 @@ awful.util.spawn_with_shell("urxvt -e wicd-curses");
 os.execute("killall conky")
 os.execute("conky &")
 
+
+--awful.util.spawn_with_shell(terminal .. 'if [ "ls /etc/debian_version" == "ls: cannot access /etc/debian_version    : No such file or directory" ];then echo "No debian menu";else echo "There is a debian menu";fi');)

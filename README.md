@@ -19,7 +19,7 @@ I use wicd and htop, it spawns at restart of awesome.
 
 And of course I use Vim (emacs lovers should change the default editor).
 
-
+This theme is still under developpement, it is planed to mostrly remove conky
 
 ## INSTALL :
 copy themes/ icons/ rc.lua to ~/.config/awesome
@@ -34,6 +34,7 @@ if you don't have a Debian based distribution, you will need to remove all the o
 
 the same goes for conky and wicd
 
+I make an extensive of MPD in the theme
 
 finally you might want to remove my personal binds such as the xtrlock one and the layout keyboard
 

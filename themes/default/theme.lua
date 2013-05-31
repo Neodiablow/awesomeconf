@@ -4,7 +4,7 @@
 
 theme = {}
 
-themes_dir = os.getenv("HOME") .. "/.config/awesome/themes/default"
+themes_dir = os.getenv("HOME") .. "/.config/awesome/themes/default/"
 
 theme.font          = "visitor TT2 BRK 12"
 
@@ -98,7 +98,8 @@ theme.layout_dwindle = themes_dir .. "/layouts/dwindlew.png"
 
 
 --Personal icons (awesome menu rc.lua)
-theme.awesome_icon = os.getenv("HOME") .. "/.config/awesome/icons/awesome16.png"
+theme.awesome_icon = themes_dir .. "../../icons/awesome16.png"
+
 theme.debian_icon = themes_dir .. "/icons/debian_icon16.png"
 theme.irc_icon = themes_dir .. "/icons/irssi.png"
 theme.vim_icon = themes_dir .. "/icons/vim.png"
@@ -110,6 +111,20 @@ theme.switch_icon = themes_dir .. "/icons/switch.png"
 theme.comm_icon = themes_dir .. "/icons/commh.png"
 theme.filez_icon = themes_dir .. "/icons/filezilla.png"
 theme.tunnel_icon = themes_dir .. "/icons/tunnel.png"
+--widget
+theme.widget_vol = themes_dir .. "/icons/vol.png"
+theme.widget_vol_low = themes_dir .. "/icons/vol_low.png"
+theme.widget_vol_no = themes_dir .. "/icons/vol_no.png"
+theme.widget_vol_mute = themes_dir .. "/icons/vol_mute.png"
+theme.widget_cpu = themes_dir .. "/icons/cpu.png"
+theme.widget_mem = themes_dir .. "/icons/mem.png"
+theme.widget_music = themes_dir .. "/icons/note.png"
+theme.widget_music_on = themes_dir .. "/icons/note_on.png"
+
+--separator
+theme.arrl = themes_dir .. "/icons/arrl.png"
+theme.arrl_dl = themes_dir .. "/icons/arrl_dl.png"
+theme.arrl_ld = themes_dir .. "/icons/arrl_ld.png"
 
 
  return theme
