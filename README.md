@@ -13,9 +13,9 @@ I use thunar as a file manager (change the mod + e binding if you don't use thun
 
 I use xtrlock
 
-I use URXVT as terminal.
+I use _URXVT_ as terminal. (change to terminator or urxvtc or others)
 
-I use wicd and htop, it spawns at restart of awesome.
+I use _wicd_ and htop, it spawns at restart of awesome. 
 
 And of course I use Vim (emacs lovers should change the default editor).
 
@@ -43,3 +43,4 @@ Arpinux for the fonts
 
 Malekal for the initial tuto years ago
 
+I recently found this https://github.com/copycat-killer/awesome-copycats/ , a lot of interesting tricks and inspiration (some icons too).
