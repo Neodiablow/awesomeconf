@@ -30,7 +30,7 @@ copy .conkyrc to ~/
 
 if you want to use "alt" instead of "super/windows" you shall modify Mod4 to Mod1
 
-if you don't have a Debian based distribution, you will need to remove all the occurences of "debian menu"
+if you don't have a Debian based distribution, you will need to remove all the occurences of "debian menu, (debian menu isn't activated anymore, you can decomment it)"
 
 the same goes for conky and wicd
 
@@ -44,3 +44,5 @@ Arpinux for the fonts
 Malekal for the initial tuto years ago
 
 I recently found this https://github.com/copycat-killer/awesome-copycats/ , a lot of interesting tricks and inspiration (some icons too).
+
+#TODO
