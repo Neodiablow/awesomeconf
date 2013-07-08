@@ -13,7 +13,7 @@ local naughty = require("naughty")
 local menubar = require("menubar")
 
 -- Load Debian menu entries
-local debian_menu = require("debian_menu")
+--local debian_menu = require("debian_menu")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -50,7 +50,7 @@ themes = conf_dir .. "/themes"
 active_theme = themes .. "/default"
 
 --Active theme
-						--beautiful.init("/usr/share/awesome/themes/default/theme.lua")
+--beautiful.init("/usr/share/awesome/themes/default/theme.lua")
 beautiful.init( active_theme .. "/theme.lua") 
 
 -- Lazy shortucts
@@ -68,6 +68,7 @@ explorer = "thunar"
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
+altkey = "Mod1"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
@@ -113,7 +114,7 @@ end
 
 --transmission icon, to represent my p2p client (looking for a better one if you wanna propose one)
 awful.tag.setproperty(tags[1][7], "icon_only", 1)
---}}}
+-- End Tags}}}
 
 
 -- {{{ Menu
@@ -137,7 +138,7 @@ downloadmenu = {
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
                                                             { "communicate",communicationmenu, beautiful.comm_icon},
-                                    { "Debian", debian_menu.Debian, beautiful.debian_icon },
+                                    --{ "Debian", debian_menu.Debian, beautiful.debian_icon }, --useless to have a debian menu
                                     { "Download",downloadmenu,beautiful.tunnel_icon},
                                     { "open terminal", terminal, beautiful.vim_icon },
                                     { "restart", awesome.restart, beautiful.restart_icon },
@@ -150,171 +151,168 @@ mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
 
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
--- }}}
+-- End Menu}}}
 
 
 -- {{{ Wibox
 
--- Create a textclock widget
-mytextclock = awful.widget.textclock()
+	-- Create a textclock widget
+	mytextclock = awful.widget.textclock()
 
--- Calendar attached to the textclock
-local os = os
-local string = string
-local table = table
-local util = awful.util
+	-- Calendar attached to the textclock
+	local os = os
+	local string = string
+	local table = table
+	local util = awful.util
 
-char_width = nil
-text_color = theme.fg_normal or "#FFFFFF"
-today_color = theme.tasklist_fg_focus or "#FF7100"
-calendar_width = 21
+	char_width = nil
+	text_color = theme.fg_normal or "#FFFFFF"
+	today_color = theme.tasklist_fg_focus or "#FF7100"
+	calendar_width = 21
 
-local calendar = nil
-local offset = 0
+	local calendar = nil
+	local offset = 0
 
-local data = nil
+	local data = nil
 
-local function pop_spaces(s1, s2, maxsize)
-   local sps = ""
-   for i = 1, maxsize - string.len(s1) - string.len(s2) do
-      sps = sps .. " "
-   end
-   return s1 .. sps .. s2
-end
+	local function pop_spaces(s1, s2, maxsize)
+	   local sps = ""
+	   for i = 1, maxsize - string.len(s1) - string.len(s2) do
+		  sps = sps .. " "
+	   end
+	   return s1 .. sps .. s2
+	end
 
-local function create_calendar()
-   offset = offset or 0
+	local function create_calendar()
+	   offset = offset or 0
 
-   local now = os.date("*t")
-   local cal_month = now.month + offset
-   local cal_year = now.year
-   if cal_month > 12 then
-      cal_month = (cal_month % 12)
-      cal_year = cal_year + 1
-   elseif cal_month < 1 then
-      cal_month = (cal_month + 12)
-      cal_year = cal_year - 1
-   end
+	   local now = os.date("*t")
+	   local cal_month = now.month + offset
+	   local cal_year = now.year
+	   if cal_month > 12 then
+		  cal_month = (cal_month % 12)
+		  cal_year = cal_year + 1
+	   elseif cal_month < 1 then
+		  cal_month = (cal_month + 12)
+		  cal_year = cal_year - 1
+	   end
 
-   local last_day = os.date("%d", os.time({ day = 1, year = cal_year,
-                                            month = cal_month + 1}) - 86400)
-   local first_day = os.time({ day = 1, month = cal_month, year = cal_year})
-   local first_day_in_week =
-      os.date("%w", first_day)
-   local result = "su mo tu we th fr sa\n"
-   for i = 1, first_day_in_week do
-      result = result .. " "
-   end
+	   local last_day = os.date("%d", os.time({ day = 1, year = cal_year,
+												month = cal_month + 1}) - 86400)
+	   local first_day = os.time({ day = 1, month = cal_month, year = cal_year})
+	   local first_day_in_week =
+		  os.date("%w", first_day)
+	   local result = "su mo tu we th fr sa\n"
+	   for i = 1, first_day_in_week do
+		  result = result .. " "
+	   end
 
-   local this_month = false
-   for day = 1, last_day do
-      local last_in_week = (day + first_day_in_week) % 7 == 0
-      local day_str = pop_spaces("", day, 2) .. (last_in_week and "" or " ")
-      if cal_month == now.month and cal_year == now.year and day == now.day then
-         this_month = true
-         result = result ..
-            string.format('<span weight="bold" foreground = "%s">%s</span>',
-                          today_color, day_str)
-      else
-         result = result .. day_str
-      end
-      if last_in_week and day ~= last_day then
-         result = result .. "\n"
-      end
-   end
+	   local this_month = false
+	   for day = 1, last_day do
+		  local last_in_week = (day + first_day_in_week) % 7 == 0
+		  local day_str = pop_spaces("", day, 2) .. (last_in_week and "" or " ")
+		  if cal_month == now.month and cal_year == now.year and day == now.day then
+			 this_month = true
+			 result = result ..
+				string.format('<span weight="bold" foreground = "%s">%s</span>',
+							  today_color, day_str)
+		  else
+			 result = result .. day_str
+		  end
+		  if last_in_week and day ~= last_day then
+			 result = result .. "\n"
+		  end
+	   end
 
-   local header
-   if this_month then
-      header = os.date("%a, %d %b %Y")
-   else
-      header = os.date("%B %Y", first_day)
-   end
-   return header, string.format('<span font="%s" foreground="%s">%s</span>',
-                                theme.font, text_color, result)
-end
+	   local header
+	   if this_month then
+		  header = os.date("%a, %d %b %Y")
+	   else
+		  header = os.date("%B %Y", first_day)
+	   end
+	   return header, string.format('<span font="%s" foreground="%s">%s</span>',
+									theme.font, text_color, result)
+	end
 
-local function calculate_char_width()
-   return beautiful.get_font_height(theme.font) * 0.555
-end
+	local function calculate_char_width()
+	   return beautiful.get_font_height(theme.font) * 0.555
+	end
 
-function hide()
-   if calendar ~= nil then
-      naughty.destroy(calendar)
-      calendar = nil
-      offset = 0
-   end
-end
+	function hide()
+	   if calendar ~= nil then
+		  naughty.destroy(calendar)
+		  calendar = nil
+		  offset = 0
+	   end
+	end
 
-function show(inc_offset)
-   inc_offset = inc_offset or 0
+	function show(inc_offset)
+	   inc_offset = inc_offset or 0
 
-   local save_offset = offset
-   hide()
-   offset = save_offset + inc_offset
+	   local save_offset = offset
+	   hide()
+	   offset = save_offset + inc_offset
 
-   local char_width = char_width or calculate_char_width()
-   local header, cal_text = create_calendar()
-   calendar = naughty.notify({ title = header,
-                               text = cal_text,
-                               timeout = 0, hover_timeout = 0.5,
-                            })
-end
+	   local char_width = char_width or calculate_char_width()
+	   local header, cal_text = create_calendar()
+	   calendar = naughty.notify({ title = header,
+								   text = cal_text,
+								   timeout = 0, hover_timeout = 0.5,
+								})
+	end
 
-mytextclock:connect_signal("mouse::enter", function() show(0) end)
-mytextclock:connect_signal("mouse::leave", hide)
-mytextclock:buttons(util.table.join( awful.button({ }, 3, function() show(-1) end),
-                                     awful.button({ }, 1, function() show(1) end)))
+	mytextclock:connect_signal("mouse::enter", function() show(0) end)
+	mytextclock:connect_signal("mouse::leave", hide)
+	mytextclock:buttons(util.table.join( awful.button({ }, 3, function() show(-1) end),
+										 awful.button({ }, 1, function() show(1) end)))
 
--- Create wibox containing conky
-statusbar = awful.wibox({ position = "bottom", screen = 1, ontop = false, width = 1, height = 12 })
-
--- Create a wibox for each screen and add it
-mywibox = {}
-mypromptbox = {}
-mylayoutbox = {}
-mytaglist = {}
-mytaglist.buttons = awful.util.table.join(
-                    awful.button({ }, 1, awful.tag.viewonly),
-                    awful.button({ modkey }, 1, awful.client.movetotag),
-                    awful.button({ }, 3, awful.tag.viewtoggle),
-                    awful.button({ modkey }, 3, awful.client.toggletag),
-                    awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
-                    awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)
-                    )
-mytasklist = {}
-mytasklist.buttons = awful.util.table.join(
-                     awful.button({ }, 1, function (c)
-                                              if c == client.focus then
-                                                  c.minimized = true
-                                              else
-                                                  -- Without this, the following
-                                                  -- :isvisible() makes no sense
-                                                  c.minimized = false
-                                                  if not c:isvisible() then
-                                                      awful.tag.viewonly(c:tags()[1])
-                                                  end
-                                                  -- This will also un-minimize
-                                                  -- the client, if needed
-                                                  client.focus = c
-                                                  c:raise()
-                                              end
-                                          end),
-                     awful.button({ }, 3, function ()
-                                              if instance then
-                                                  instance:hide()
-                                                  instance = nil
-                                              else
-                                                  instance = awful.menu.clients({ width=250 })
-                                              end
-                                          end),
-                     awful.button({ }, 4, function ()
-                                              awful.client.focus.byidx(1)
-                                              if client.focus then client.focus:raise() end
-                                          end),
-                     awful.button({ }, 5, function ()
-                                              awful.client.focus.byidx(-1)
-                                              if client.focus then client.focus:raise() end
-                                          end))
+	-- Create a wibox for each screen and add it
+	mywibox = {}
+	mypromptbox = {}
+	mylayoutbox = {}
+	mytaglist = {}
+	mytaglist.buttons = awful.util.table.join(
+						awful.button({ }, 1, awful.tag.viewonly),
+						awful.button({ modkey }, 1, awful.client.movetotag),
+						awful.button({ }, 3, awful.tag.viewtoggle),
+						awful.button({ modkey }, 3, awful.client.toggletag),
+						awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
+						awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)
+						)
+	mytasklist = {}
+	mytasklist.buttons = awful.util.table.join(
+						 awful.button({ }, 1, function (c)
+												  if c == client.focus then
+													  c.minimized = true
+												  else
+													  -- Without this, the following
+													  -- :isvisible() makes no sense
+													  c.minimized = false
+													  if not c:isvisible() then
+														  awful.tag.viewonly(c:tags()[1])
+													  end
+													  -- This will also un-minimize
+													  -- the client, if needed
+													  client.focus = c
+													  c:raise()
+												  end
+											  end),
+						 awful.button({ }, 3, function ()
+												  if instance then
+													  instance:hide()
+													  instance = nil
+												  else
+													  instance = awful.menu.clients({ width=250 })
+												  end
+											  end),
+						 awful.button({ }, 4, function ()
+												  awful.client.focus.byidx(1)
+												  if client.focus then client.focus:raise() end
+											  end),
+						 awful.button({ }, 5, function ()
+												  awful.client.focus.byidx(-1)
+												  if client.focus then client.focus:raise() end
+											  end))
 
 for s = 1, screen.count() do
 
@@ -323,6 +321,7 @@ for s = 1, screen.count() do
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
 
 	--{{{Widgets
+
 	
 	   -- CPU widget
 	cpuicon = wibox.widget.imagebox()
@@ -330,12 +329,14 @@ for s = 1, screen.count() do
 	cpuwidget = wibox.widget.textbox()
 	vicious.register(cpuwidget, vicious.widgets.cpu, '<span font="Terminus 9"><span background="#535d6c" color="#ffffff" font="visitor TT2 BRK 12" > $1% </span> </span>', 3)
 	cpuicon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn(tasks, false) end)))
+
 	
 	-- MEM widget
 	memicon = wibox.widget.imagebox()
 	memicon:set_image(beautiful.widget_mem)
 	memwidget = wibox.widget.textbox()
 	vicious.register(memwidget, vicious.widgets.mem, ' $2MB ', 13)
+
 	
 	    -- Volume widget
 	volicon = wibox.widget.imagebox()
@@ -374,7 +375,32 @@ for s = 1, screen.count() do
 	return ""
 	end
 	end, 1)
+
+
+	--Baterry Widget
+	batwidget = wibox.widget.textbox()
+	vicious.register(batwidget, vicious.widgets.bat, '<span background="#535d6c" rise="2000" color="#ffffff" font="visitor TT2 BRK 12"> $1 Battery $2% </span> ', 60, "BAT0")
+
+	vicious.cache(vicious.widgets.net)
+
 	
+	--Network Widget WLAN
+	netwidget = wibox.widget.textbox()
+	vicious.register(netwidget, vicious.widgets.net, '<span rise="2000"><span font="visitor TT2 BRK 12">wlan 0 : <span font="visitor TT2 BRK 12" color="#7AC82E">${wlan0 down_kb}</span> Kb </span><span font="Terminus 7" color="#EEDDDD">↓↑</span><span font="visitor TT2 BRK 12"> <span font="visitor TT2 BRK 12" color="#46A8C3">${wlan0 up_kb}</span> Kb</span></span> ', 3)
+	neticon = wibox.widget.imagebox()
+	neticon:set_image(beautiful.widget_net)
+	netwidget:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(iptraf) end)))
+
+
+	--Network Widget ETH
+	netwidgeteth = wibox.widget.textbox()
+	vicious.register(netwidgeteth, vicious.widgets.net, '<span background="#535d6c" rise="2000"><span color="#ffffff" font="visitor TT2 BRK 12"> eth 0 : <span font="visitor TT2 BRK 12" color="#7AC82E">${eth0 down_kb}</span> Kb <span font="Terminus 7">↓↑</span><span color="#ffffff"> <span background="#535d6c" font="visitor TT2 BRK 12" color="#46A8C3">${eth0 up_kb}</span> Kb </span></span></span>', 3)
+	netwidgeteth:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.util.spawn_with_shell(iptraf) end)))
+		
+	-- End Widget}}}
+	
+	
+	--{{{ Organize Wiboxes
 	
 	--- Separators
 	spr = wibox.widget.textbox(' ')
@@ -390,9 +416,15 @@ for s = 1, screen.count() do
 	arrl_dl = wibox.widget.imagebox()
 	arrl_dl:set_image(beautiful.arrl_dl)
 	arrl_ld = wibox.widget.imagebox()
-	arrl_ld:set_image(beautiful.arrl_ld)
+	arrl_ld:set_image(beautiful.arrl_ld)	
 	
-	--}}}
+    -- Create the top wibox
+    mywibox[s] = awful.wibox({ position = "top", screen = s })
+    
+    -- Create the bottom wibox (containing most informations) a.k.a. statusbar
+    statusbar = awful.wibox({ position = "bottom", screen = 1, height = 14 })
+	-- statusbar = awful.wibox({ position = "bottom", screen = 1, ontop = true, width = 1, height = 12 }) -- original exemple
+
 
 
     -- We need one layoutbox per screen.
@@ -408,23 +440,31 @@ for s = 1, screen.count() do
     -- Create a tasklist widget
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
-    -- Create the wibox
-    mywibox[s] = awful.wibox({ position = "top", screen = s })
-
+   
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
-    --left_layout:add(mylauncher) --launcher set on the left
     left_layout:add(mytaglist[s])
     left_layout:add(mypromptbox[s])
+
+    --Widgets are aligned bottom left
+    local bleft_layout = wibox.layout.fixed.horizontal()
+	bleft_layout:add(batwidget)
+   	bleft_layout:add(netwidget) 
+   	bleft_layout:add(netwidgeteth) 
+	
+    --Widgets are aligned bottom right
+    local bright_layout = wibox.layout.fixed.horizontal()
+   	bright_layout:add(spr)
+   	bright_layout:add(arrl)
+   	bright_layout:add(arrl)
+   	bright_layout:add(mpdicon)
+   	bright_layout:add(mpdwidget)
+
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     			--if s == 1 then right_layout:add(wibox.widget.systray()) end --has been put below
     right_layout:add(spr)
-    right_layout:add(arrl)
-    right_layout:add(arrl)
-    right_layout:add(mpdicon)
-    right_layout:add(mpdwidget)
     right_layout:add(arrl_ld)
     right_layout:add(volicon)
     right_layout:add(volumewidget)
@@ -438,26 +478,32 @@ for s = 1, screen.count() do
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
-    -- Now bring it all together (with the tasklist in the middle)
+    -- Top line (with the tasklist in the middle)
     local layout = wibox.layout.align.horizontal()
     layout:set_left(left_layout)
     layout:set_middle(mytasklist[s])
     layout:set_right(right_layout)
 
     mywibox[s]:set_widget(layout)
-    
-    statusbar = {}
-end
--- }}}
+   
 
+    --Bottom line 
+    local blayout = wibox.layout.align.horizontal()
+    statusbar:set_widget(blayout)
+    blayout:set_left(bleft_layout)
+    blayout:set_right(bright_layout)
+    
+    --End Organize Wiboxes}}}
+       
+-- End Widgets}}}
+end
 
 -- {{{ Mouse bindings
-root.buttons(awful.util.table.join(
+	root.buttons(awful.util.table.join(
     awful.button({ }, 3, function () mymainmenu:toggle() end),
     awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
-))
--- }}}
+    awful.button({ }, 5, awful.tag.viewprev)))
+-- End Mouse bindings}}}
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
@@ -491,8 +537,8 @@ globalkeys = awful.util.table.join(
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx(  1)    end),
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx( -1)    end),
-    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),--wtf is this?
-    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),--wtf is this?
+    awful.key({ modkey, altkey }, "Right", function () awful.screen.focus_relative( 1) end),--Change the screen focus
+    awful.key({ modkey, altkey }, "Left", function () awful.screen.focus_relative(-1) end),--change the screen focus
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto),
     awful.key({ modkey,           }, "Tab",
         function ()
@@ -599,12 +645,13 @@ clientbuttons = awful.util.table.join(
 
 -- Set keys
 root.keys(globalkeys)
--- }}}
+-- End Key bindings}}}
 
 
 -- {{{ Rules
 awful.rules.rules = {
     -- All clients will match this rule.
+	--rule_any,except,except_any
     { rule = { },
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
@@ -617,11 +664,17 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
-    -- Set Firefox to always map on tags number 2 of screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { tag = tags[1][2] } },
+    { rule = { instance = "plugin-container" },
+     properties = { floating = true}, 
+	},
+    -- Iceweasel will be on screen [1] tag[3].
+     { rule = { class = "Iceweasel" },
+       properties = { tag = tags[1][3] } },
+    -- Mumble will be on screen [1] tag[1].
+     { rule = { class = "Mumble" },
+       properties = { tag = tags[1][1] } },
 }
--- }}}
+-- End Rules}}}
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
@@ -694,35 +747,10 @@ end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
--- }}
-
---EXPERIMENTAL
-
---function run_once(prg)
---    if not prg then
---        do return nil end
---    end
---    awful.util.spawn_with_shell("pgrep -f -u $USER -x " .. prg .. " || (" .. prg .. ")")
---end
-
-
-function run_once(cmd)
-  findme = cmd
-  firstspace = cmd:find(" ")
-  if firstspace then
-     findme = cmd:sub(0, firstspace-1)
-  end
-  awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
- end 
+-- End Signals}}
 
 
 os.execute("killall htop")
 awful.util.spawn_with_shell("urxvt -e htop");
 os.execute("killall wicd-curses")
 awful.util.spawn_with_shell("urxvt -e wicd-curses");
-os.execute("killall conky")
-os.execute("conky &")
-
-
---awful.util.spawn_with_shell(terminal .. 'if [ "ls /etc/debian_version" == "ls: cannot access /etc/debian_version    : No such file or directory" ];then echo "No debian menu";else echo "There is a debian menu";fi');)
-
