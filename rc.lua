@@ -113,7 +113,9 @@ for s = 1, screen.count() do
 end
 
 --transmission icon, to represent my p2p client (looking for a better one if you wanna propose one)
-awful.tag.setproperty(tags[1][7], "icon_only", 1)
+for s = 1, screen.count() do 
+	awful.tag.setproperty(tags[s][7], "icon_only", 1)
+end
 -- End Tags}}}
 
 
@@ -463,7 +465,6 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    			--if s == 1 then right_layout:add(wibox.widget.systray()) end --has been put below
     right_layout:add(spr)
     right_layout:add(arrl_ld)
     right_layout:add(volicon)
@@ -474,7 +475,7 @@ for s = 1, screen.count() do
     right_layout:add(arrl_ld)
     right_layout:add(cpuicon)
     right_layout:add(cpuwidget)
-    if s == 1 then right_layout:add(wibox.widget.systray()) end
+    if s == 1 then right_layout:add(wibox.widget.systray()) end --Displays the icons of the launched software only on screen 1
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
