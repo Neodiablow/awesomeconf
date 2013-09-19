@@ -6,6 +6,12 @@ My awesome config
 Here is my personal awesomeWM config, nothing fancy. Please help yourself and copy anything you could find interesting in those files :-).
 
 
+.. image:: example.png
+   :height: 600
+   :width: 1200
+   :scale: 50
+   :alt: Example of the theme
+
 ##Remarks
 I use MPD if you don't you can remove some big parts of the rc.lua or replace them to suite your own music player.
 
