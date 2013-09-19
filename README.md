@@ -7,36 +7,26 @@ Here is my personal awesomeWM config, nothing fancy. Please help yourself and co
 
 
 ##Remarks
-I use mpd, you might need to modify a little bit conky if you wish to display the playlist from another music player.
+I use MPD if you don't you can remove some big parts of the rc.lua or replace them to suite your own music player.
 
-I use thunar as a file manager (change the mod + e binding if you don't use thunar).
+I use thunar as a file manager (change the mod + e binding if you don't use thunar) _xtrlock_, _URXVT_ as terminal. (change to terminator or urxvtc or others)
 
-I use xtrlock
+I use _wicd_ and htop, they spawns at restart of awesome. 
 
-I use _URXVT_ as terminal. (change to terminator or urxvtc or others)
+And of finally I use Vim (emacs lovers should change the default editor).
 
-I use _wicd_ and htop, it spawns at restart of awesome. 
-
-And of course I use Vim (emacs lovers should change the default editor).
-
-This theme is still under developpement, it is planed to mostly remove conky
+This theme is still under "developpement".
 
 ## INSTALL :
 copy themes/ icons/ rc.lua to ~/.config/awesome
 
 copy font to ~/.fonts
 
-copy .conkyrc to ~/
-
 if you want to use "alt" instead of "super/windows" you shall modify Mod4 to Mod1
-
-if you don't have a Debian based distribution, you will need to remove all the occurences of "debian menu, (debian menu isn't activated anymore, you can decomment it)"
-
-the same goes for conky and wicd
 
 I make an extensive use of MPD in the theme
 
-finally you might want to remove my personal binds such as the xtrlock one and the layout keyboard
+Finally you might want to remove my personal bindings such as the xtrlock one and the layout keyboard
 
 ## Thanks
 Arpinux for the fonts
