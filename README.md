@@ -14,11 +14,9 @@ I use thunar as a file manager (change the mod + e binding if you don't use thun
 
 I use _wicd_ and htop, they spawns at restart of awesome. 
 
-And of finally I use Vim (emacs lovers should change the default editor).
+finally I use Vim (emacs lovers should change the default editor).
 
-This theme is still under "developpement".
-
-## INSTALL :
+## Install
 copy themes/ icons/ rc.lua to ~/.config/awesome
 
 copy font to ~/.fonts
